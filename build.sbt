@@ -12,7 +12,9 @@ libraryDependencies ++= Seq(
   cache,
   javaJpa,
   "org.hibernate" % "hibernate-entitymanager" % "4.3.9.Final",
-  "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
+  "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
+  "com.google.api-client" % "google-api-client" % "1.19.1",
+  "com.google.api-client" % "google-api-client-gson" % "1.19.1"
 )
 
 // Play provides two styles of routers, one expects its actions to be injected, the

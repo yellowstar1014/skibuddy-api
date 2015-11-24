@@ -1,7 +1,10 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -25,8 +28,8 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "owner")
     private User owner;
-    @ManyToMany(mappedBy = "events")
-    private List<User> paticipants;
+    @OneToMany(mappedBy = "event")
+    private List<Attend> attends;
 
     public User getOwner() {
         return owner;
@@ -74,5 +77,24 @@ public class Event {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    @JsonIgnore
+    public List<Attend> getAttends() {
+        return attends;
+    }
+
+    public void setAttends(List<Attend> attends) {
+        this.attends = attends;
+    }
+
+    public List<EventUserWithStatus> getEventUser() {
+        List<EventUserWithStatus> list = new LinkedList<>();
+        for (Attend attend : attends) {
+            EventUserWithStatus eu = new EventUserWithStatus();
+            eu.setStatus(attend.getStatus());
+            eu.setUser(attend.getUser());
+        }
+        return list;
     }
 }

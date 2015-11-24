@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -16,31 +17,37 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "avatar")
+    private String avatar;
     @Column(name = "email")
     private String email;
-    @Column(name = "token")
-    private String token;
-    @Column(name="expiration")
-    private Date expiration;
+    @Column(name = "google_id")
+    private String google_id;
     @OneToMany(mappedBy = "owner")
     private List<Record> records;
-    @ManyToMany
-    @JoinTable(name="user_event",
-            joinColumns=
-            @JoinColumn(name="user_id", referencedColumnName="id"),
-            inverseJoinColumns=
-            @JoinColumn(name="event_id", referencedColumnName="id")
-    )
-    private List<Event> events;
-
+    @OneToMany (mappedBy = "user")
+    private List<Attend> attends;
 
     @JsonIgnore
-    public List<Event> getEvents() {
-        return events;
+    public List<Attend> getAttends() {
+        return attends;
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    public void setAttends(List<Attend> attends) {
+        this.attends = attends;
+    }
+
+    public List<UserEventWithStatus> getUserEvent() {
+        List<UserEventWithStatus> list = new LinkedList<>();
+        for (Attend attend : attends) {
+            UserEventWithStatus ue = new UserEventWithStatus();
+            ue.setEvent(attend.getEvent());
+            ue.setStatus(attend.getStatus());
+            list.add(ue);
+        }
+        return list;
     }
 
     public int getId() {
@@ -59,19 +66,35 @@ public class User {
         this.email = email;
     }
 
-    public String getToken() {
-        return token;
+    public String getName() {
+        return name;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Date getExpiration() {
-        return expiration;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setExpiration(Date expiration) {
-        this.expiration = expiration;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getGoogle_id() {
+        return google_id;
+    }
+
+    public void setGoogle_id(String google_id) {
+        this.google_id = google_id;
+    }
+
+    public List<Record> getRecords() {
+        return records;
+    }
+
+    public void setRecords(List<Record> records) {
+        this.records = records;
     }
 }
