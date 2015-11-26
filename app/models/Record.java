@@ -10,7 +10,7 @@ import org.postgresql.geometric.PGpath;
  * Created by yellowstar on 11/15/15.
  */
 @Entity
-@Table(name = "record")
+@Table(name = "public.record")
 public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

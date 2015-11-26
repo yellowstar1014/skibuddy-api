@@ -11,7 +11,7 @@ import java.util.List;
  * Created by yellowstar on 11/15/15.
  */
 @Entity
-@Table(name = "event")
+@Table(name = "public.event")
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

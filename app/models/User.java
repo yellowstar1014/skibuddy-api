@@ -1,7 +1,6 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.postgresql.geometric.PGpoint;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,7 +11,7 @@ import java.util.List;
  * Created by yellowstar on 11/15/15.
  */
 @Entity
-@Table(name = "user")
+@Table(name = "public.user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,7 +8,7 @@ import javax.persistence.*;
  * Created by yellowstar on 11/25/15.
  */
 @Entity
-@Table(name = "location")
+@Table(name = "public.location")
 public class Location {
     @Id
     @OneToOne
