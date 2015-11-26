@@ -3,6 +3,9 @@ package models;
 import javax.persistence.*;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.postgresql.geometric.PGpath;
+
 /**
  * Created by yellowstar on 11/15/15.
  */
@@ -19,10 +22,13 @@ public class Record {
     private Date endTime;
     @Column(name = "distance")
     private double distance;
+    @Column(name = "path")
+    private PGpath path;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User owner;
 
+    @JsonIgnore
     public int getId() {
         return id;
     }
@@ -55,11 +61,20 @@ public class Record {
         this.distance = distance;
     }
 
+    @JsonIgnore
     public User getOwner() {
         return owner;
     }
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public PGpath getPath() {
+        return path;
+    }
+
+    public void setPath(PGpath path) {
+        this.path = path;
     }
 }

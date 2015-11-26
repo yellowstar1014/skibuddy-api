@@ -1,6 +1,7 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.postgresql.geometric.PGpoint;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -23,8 +24,10 @@ public class User {
     private String avatar;
     @Column(name = "email")
     private String email;
+    @Column(name = "expiration")
+    private Date expiration;
     @Column(name = "google_id")
-    private String google_id;
+    private String googleId;
     @OneToMany(mappedBy = "owner")
     private List<Record> records;
     @OneToMany (mappedBy = "user")
@@ -82,12 +85,12 @@ public class User {
         this.avatar = avatar;
     }
 
-    public String getGoogle_id() {
-        return google_id;
+    public String getGoogleId() {
+        return googleId;
     }
 
-    public void setGoogle_id(String google_id) {
-        this.google_id = google_id;
+    public void setGoogleId(String google_id) {
+        this.googleId = google_id;
     }
 
     public List<Record> getRecords() {
@@ -96,5 +99,13 @@ public class User {
 
     public void setRecords(List<Record> records) {
         this.records = records;
+    }
+
+    public Date getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(Date expiration) {
+        this.expiration = expiration;
     }
 }
