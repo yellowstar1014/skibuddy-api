@@ -1,18 +1,19 @@
 package daos;
 
-import models.Record;
+import models.Attend;
+import models.Event;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
 
 import javax.persistence.EntityManager;
+
 /**
- * Created by yellowstar on 11/23/15.
+ * Created by yellowstar on 12/2/15.
  */
-public class RecordDao {
+public class AttendDao {
     @Transactional
-    public Record create(Record record) {
+    public void create(Attend attend) {
         EntityManager em = JPA.em();
-        em.persist(record);
-        return record;
+        em.persist(attend);
     }
 }

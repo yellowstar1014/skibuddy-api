@@ -3,6 +3,7 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * Created by yellowstar on 11/15/15.
  */
 @Entity
-@Table(name = "public.user")
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,18 +32,45 @@ public class User {
     private List<Record> records;
     @OneToMany (mappedBy = "user")
     private List<Attend> attends;
+    @OneToMany (mappedBy = "owner")
+    private List<Event> events;
+
+    @JsonIgnore
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    public void addEvent(Event event) {
+        if (events == null) {
+            events = new LinkedList<>();
+        }
+        events.add(event);
+    }
 
     @JsonIgnore
     public List<Attend> getAttends() {
         return attends;
     }
 
+    public void addAttend(Attend attend) {
+        if (attends == null) {
+            attends = new LinkedList<>();
+        }
+        attends.add(attend);
+    }
+
     public void setAttends(List<Attend> attends) {
         this.attends = attends;
     }
 
+    @JsonIgnore
     public List<UserEventWithStatus> getUserEvent() {
         List<UserEventWithStatus> list = new LinkedList<>();
+        if (attends == null) return list;
         for (Attend attend : attends) {
             UserEventWithStatus ue = new UserEventWithStatus();
             ue.setEvent(attend.getEvent());
@@ -92,6 +120,7 @@ public class User {
         this.googleId = google_id;
     }
 
+    @JsonIgnore
     public List<Record> getRecords() {
         return records;
     }

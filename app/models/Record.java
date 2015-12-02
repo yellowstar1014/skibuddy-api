@@ -10,7 +10,7 @@ import org.postgresql.geometric.PGpath;
  * Created by yellowstar on 11/15/15.
  */
 @Entity
-@Table(name = "public.record")
+@Table(name = "record")
 public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class Record {
     @Column(name = "distance")
     private double distance;
     @Column(name = "path")
-    private PGpath path;
+    private String path;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User owner;
@@ -70,11 +70,11 @@ public class Record {
         this.owner = owner;
     }
 
-    public PGpath getPath() {
+    public String getPath() {
         return path;
     }
 
-    public void setPath(PGpath path) {
+    public void setPath(String path) {
         this.path = path;
     }
 }

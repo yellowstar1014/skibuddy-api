@@ -3,10 +3,20 @@
 # ~~~~
 
 # Home page
-GET        /                    controllers.Application.index()
+GET         /                                    controllers.Application.index()
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file        controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                        controllers.Assets.versioned(path="/public", file: Asset)
 
-POST       /authenticate        controllers.MainController.authenticate()
-POST       /users/:uid/records  controllers.MainController.addRecord(uid:Integer)
+POST        /authenticate                        controllers.MainController.authenticate()
+GET         /users/:uid                          controllers.MainController.getUser(uid:Integer)
+
+POST        /users/:uid/records                  controllers.MainController.addRecord(uid:Integer)
+GET         /users/:uid/records                  controllers.MainController.getRecords(uid:Integer)
+
+POST        /users/:uid/events                   controllers.MainController.createEvent(uid:Integer)
+GET         /users/:uid/events                   controllers.MainController.getUserEvents(uid:Integer, status:Integer ?= 0)
+
+GET         /events/:eid                         controllers.MainController.getEvent(eid:Integer)
+POST        /events/:eid/attendees/:email        controllers.MainController.invite(eid:Integer, email:String)
+

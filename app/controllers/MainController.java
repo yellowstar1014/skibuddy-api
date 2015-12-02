@@ -1,12 +1,9 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
+import daos.AttendDao;
 import daos.EventDao;
+import daos.RecordDao;
 import daos.UserDao;
 import models.*;
 import play.db.jpa.Transactional;
@@ -19,8 +16,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,9 +29,13 @@ public class MainController extends Controller {
     private UserDao userDao;
     @Inject
     private EventDao eventDao;
+    @Inject
+    private RecordDao recordDao;
+    @Inject
+    private AttendDao attendDao;
 
     @Transactional
-    public Result getUserProfile(int uid) {
+    public Result getUser(int uid) {
         User user = userDao.findById(uid);
         return ok(Json.toJson(user));
     }
@@ -44,24 +43,34 @@ public class MainController extends Controller {
     @Transactional
     public Result addRecord(int uid) {
         JsonNode jsonNode = request().body().asJson();
-        Record record = Json.fromJson(jsonNode, Record.class);
+        RecordDTO recordDTO = Json.fromJson(jsonNode, RecordDTO.class);
+        Record record = new Record();
+        record.setStartTime(recordDTO.getStartTime());
+        record.setEndTime(recordDTO.getEndTime());
+        record.setDistance(recordDTO.getDistance());
+        record.setPath(recordDTO.getPath().getValue());
         User user = userDao.findById(uid);
         record.setOwner(user);
-        user.getRecords().add(record);
-        return ok();
+        recordDao.create(record);
+        return ok(Json.toJson(record));
     }
 
     @Transactional
-    public Result invite(int eid, int uid) {
+    public Result getRecords(int uid) {
         User user = userDao.findById(uid);
+        return ok(Json.toJson(user.getRecords()));
+    }
+
+    @Transactional
+    public Result invite(int eid, String email) {
+        User user = userDao.findByEmail(email);
         Event event = eventDao.findById(eid);
         Attend attend = new Attend();
         attend.setEvent(event);
         attend.setUser(user);
-        attend.setStatus(0); // 0 invited, 1 accepted, 2 rejected, 3 passed
-        user.getAttends().add(attend);
-        event.getAttends().add(attend);
-        return ok();
+        attend.setStatus(1); // -1 all, 0 owned, 1 invited, 2 accepted, 3 rejected, 4 passed
+        attendDao.create(attend);
+        return ok(Json.toJson(attend));
     }
 
     @Transactional
@@ -71,18 +80,25 @@ public class MainController extends Controller {
     }
 
     @Transactional
-    public Result createEvent() {
+    public Result createEvent(int uid) {
         JsonNode json = request().body().asJson();
         Event event = Json.fromJson(json, Event.class);
+        User user = userDao.findById(uid);
+        event.setOwner(user);
         event = eventDao.create(event);
         return ok(Json.toJson(event));
     }
 
     @Transactional
-    public Result getUserEvents(int uid) {
+    public Result getUserEvents(int uid, int status) {
         User user = userDao.findById(uid);
-        List<UserEventWithStatus> events = user.getUserEvent();
-        return ok(Json.toJson(events));
+        if (status == 0) {
+            List<Event> events = user.getEvents();
+            return ok(Json.toJson(events));
+        } else {
+            List<UserEventWithStatus> events = user.getUserEvent();
+            return ok(Json.toJson(events));
+        }
     }
 
     @Transactional

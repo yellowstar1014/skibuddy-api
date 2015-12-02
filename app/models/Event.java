@@ -3,6 +3,7 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * Created by yellowstar on 11/15/15.
  */
 @Entity
-@Table(name = "public.event")
+@Table(name = "event")
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,12 +85,21 @@ public class Event {
         return attends;
     }
 
+    public void addAttend(Attend attend) {
+        if (attends == null) {
+            attends = new LinkedList<>();
+        }
+        attends.add(attend);
+    }
+
+
     public void setAttends(List<Attend> attends) {
         this.attends = attends;
     }
 
     public List<EventUserWithStatus> getEventUser() {
         List<EventUserWithStatus> list = new LinkedList<>();
+        if (attends == null) return list;
         for (Attend attend : attends) {
             EventUserWithStatus eu = new EventUserWithStatus();
             eu.setStatus(attend.getStatus());

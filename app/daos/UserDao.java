@@ -2,10 +2,10 @@ package daos;
 
 import models.User;
 import play.db.jpa.JPA;
+import play.db.jpa.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -28,6 +28,15 @@ public class UserDao {
     public User findBySub(String sub) {
         Query query  = JPA.em().createQuery("select u from User u where u.google_id = " + ":sub");
         query.setParameter("sub", sub);
+        List<User> users = query.getResultList();
+        if (users.size() == 0) return null;
+        return users.get(0);
+    }
+
+    @Transactional
+    public User findByEmail(String email) {
+        Query query  = JPA.em().createQuery("select u from User u where u.email = " + ":email");
+        query.setParameter("email", email);
         List<User> users = query.getResultList();
         if (users.size() == 0) return null;
         return users.get(0);
