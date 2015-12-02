@@ -26,7 +26,7 @@ public class UserDao {
 
     @Transactional
     public User findBySub(String sub) {
-        Query query  = JPA.em().createQuery("select u from User u where u.google_id = " + ":sub");
+        Query query  = JPA.em().createQuery("select u from User u where u.googleId = " + ":sub");
         query.setParameter("sub", sub);
         List<User> users = query.getResultList();
         if (users.size() == 0) return null;

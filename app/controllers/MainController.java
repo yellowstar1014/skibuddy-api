@@ -1,6 +1,10 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import daos.AttendDao;
 import daos.EventDao;
 import daos.RecordDao;
@@ -16,6 +20,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -119,6 +125,11 @@ public class MainController extends Controller {
         if (user == null) {
             user = new User();
             // get and set profile
+            user.setEmail(res.findPath("email").asText());
+            user.setAvatar(res.findPath("picture").asText());
+            user.setGoogleId(sub);
+            user.setName(res.findPath("name").asText());
+            user.setExpiration(new Date(res.findPath("exp").asLong()));
             userDao.create(user);
         }
         /*GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
@@ -128,7 +139,7 @@ public class MainController extends Controller {
         try {
             GoogleIdToken idToken = verifier.verify(identity.getIdToken());
             if (idToken != null) {
-                Payload payload = idToken.getPayload();
+                GoogleIdToken.Payload payload = idToken.getPayload();
                 payload.getSubject();
 
                 System.out.println("User ID: " + payload.getSubject());
