@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.postgresql.geometric.PGpath;
 
 /**
  * Created by yellowstar on 11/15/15.

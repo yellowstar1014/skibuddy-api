@@ -1,7 +1,5 @@
 package models;
 
-import org.postgresql.geometric.PGpoint;
-
 import javax.persistence.*;
 
 /**
@@ -17,7 +15,7 @@ public class Location {
     @MapsId
     private User user;
     @Column(name = "cur_loc")
-    private PGpoint curLocation;
+    private String curLocation;
 
     public User getUser() {
         return user;
@@ -27,11 +25,11 @@ public class Location {
         this.user = user;
     }
 
-    public PGpoint getCurLocation() {
-        return curLocation;
+    public Point getCurLocation() {
+        return new Point(curLocation);
     }
 
-    public void setCurLocation(PGpoint curLocation) {
-        this.curLocation = curLocation;
+    public void setCurLocation(Point curLocation) {
+        this.curLocation = curLocation.getValue();
     }
 }
