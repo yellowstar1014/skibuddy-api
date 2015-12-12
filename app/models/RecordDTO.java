@@ -1,6 +1,6 @@
 package models;
 
-import org.postgresql.geometric.PGpath;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
 
@@ -11,7 +11,7 @@ public class RecordDTO {
     private Date startTime;
     private Date endTime;
     private double distance;
-    private PGpath path;
+    private Path path;
 
     public Date getStartTime() {
         return startTime;
@@ -37,11 +37,16 @@ public class RecordDTO {
         this.distance = distance;
     }
 
-    public PGpath getPath() {
+    public Path getPath() {
         return path;
     }
 
-    public void setPath(PGpath path) {
+    public void setPath(Path path) {
         this.path = path;
+    }
+
+    @JsonIgnore
+    public void setPathValue(String val) {
+        this.path = new Path(val);
     }
 }

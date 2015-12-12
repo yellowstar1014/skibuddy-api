@@ -121,8 +121,17 @@ public class User {
     }
 
     @JsonIgnore
-    public List<Record> getRecords() {
-        return records;
+    public List<RecordDTO> getRecords() {
+        List<RecordDTO> recordDTOs = new ArrayList<>();
+        for (Record record : records) {
+            RecordDTO recordDTO = new RecordDTO();
+            recordDTO.setDistance(record.getDistance());
+            recordDTO.setStartTime(record.getStartTime());
+            recordDTO.setEndTime(record.getEndTime());
+            recordDTO.setPathValue(record.getPath());
+            recordDTOs.add(recordDTO);
+        }
+        return recordDTOs;
     }
 
     public void setRecords(List<Record> records) {
